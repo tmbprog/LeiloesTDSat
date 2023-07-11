@@ -1,4 +1,5 @@
 
+import com.mysql.jdbc.Connection;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -201,25 +202,28 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
 
-    private void listarProdutos(){
+    private void listarProdutos() {
         try {
-            ProdutosDAO produtosdao = new ProdutosDAO();
-            
+            ProdutosDAO produtosdao = new ProdutosDAO();             
+
             DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-            model.setNumRows(0);
-            
-            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
-            
-            for(int i = 0; i < listagem.size(); i++){
+            model.setRowCount(0); // Limpa todas as linhas da tabela
+
+            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos(); 
+
+            for (ProdutosDTO produto : listagem) {
                 model.addRow(new Object[]{
-                    listagem.get(i).getId(),
-                    listagem.get(i).getNome(),
-                    listagem.get(i).getValor(),
-                    listagem.get(i).getStatus()
+                    produto.getId(),
+                    produto.getNome(),
+                    produto.getValor(),
+                    produto.getStatus()
                 });
             }
+            
         } catch (Exception e) {
+            // Tratar a exceção adequadamente, como exibir uma mensagem de erro
+
         }
-    
-    }
+}
+
 }
