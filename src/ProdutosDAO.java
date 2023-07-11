@@ -57,7 +57,7 @@ public class ProdutosDAO {
          }
 
     }
-    
+       
     public ArrayList<ProdutosDTO> listarProdutos() {
         ArrayList<ProdutosDTO> listagem = new ArrayList<>();
 
@@ -109,7 +109,49 @@ public class ProdutosDAO {
         return listagem;
     }
     
+    public void venderProduto(int id){
+        try {
+            conn = conectaDAO.connectDB();
+
+            String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+            prep = conn.prepareStatement(sql);
+            prep.setInt(1, id);
+            prep.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar o status do produto.");
+        }
+    }
     
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+        ArrayList<ProdutosDTO> listagem = new ArrayList<>();
+
+        try {
+            conn = conectaDAO.connectDB();
+            String sql = "SELECT id, nome, valor, status FROM produtos WHERE status = 'Vendido'";
+            prep = conn.prepareStatement(sql);
+            rs = prep.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                int valor = rs.getInt("valor");
+                String status = rs.getString("status");
+
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setId(id);
+                produto.setNome(nome);
+                produto.setValor(valor);
+                produto.setStatus(status);
+                listagem.add(produto);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erro ao listar produtos vendidos: " + ex.getMessage());        
+        }
         
+        return listagem;
+    }
+
 }
+
 
